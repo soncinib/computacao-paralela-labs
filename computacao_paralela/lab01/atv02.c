@@ -7,17 +7,14 @@
 
 int main()
 {
-    pid_t pid = fork();
-
     printf("Eu sou o pai! Meu PID e %d.\n", getpid());
 
     for (int i = 0; i < N; i++)
     {
-        pid = fork();
-
+        pid_t pid = fork();
         if (pid < 0)
         {
-            printf("Erro ao criar o processo.");
+            perror("fork");
             return 1;
         }
         else if (pid == 0)
@@ -28,12 +25,8 @@ int main()
     }
 
     printf("Esperando meus filhos terminarem...\n");
-
     for (int i = 0; i < N; i++)
-    {
         wait(NULL);
-    }
-
     printf("Todos os filhos terminaram.\n");
     return 0;
 }
