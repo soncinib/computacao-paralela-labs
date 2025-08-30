@@ -25,8 +25,12 @@ int main()
     }
 
     printf("Esperando meus filhos terminarem...\n");
+
     for (int i = 0; i < N; i++)
+    {
         wait(NULL);
+    }
+
     printf("Todos os filhos terminaram.\n");
     return 0;
 }
