@@ -8,9 +8,9 @@
 #define VECTOR_SIZE 200000000
 #define NUM_PROCESSES 4
 
-void heavy_work(double *v, int a, int b)
+void heavy_work(double *v, int start, int end)
 {
-    for (int i = a; i < b; ++i)
+    for (int i = start; i < end; ++i)
         v[i] = sin(v[i]) * cos(v[i]) + sqrt(v[i]);
 }
 
@@ -35,9 +35,9 @@ int main()
         }
         if (pid == 0)
         {
-            int a = i * chunk;
-            int b = (i == NUM_PROCESSES - 1) ? VECTOR_SIZE : (i + 1) * chunk;
-            heavy_work(v, a, b);
+            int start = i * chunk;
+            int end = (i == NUM_PROCESSES - 1) ? VECTOR_SIZE : (i + 1) * chunk;
+            heavy_work(v, start, end);
             _exit(0);
         }
     }
@@ -46,9 +46,8 @@ int main()
         wait(NULL);
 
     clock_gettime(CLOCK_MONOTONIC, &t1);
-    double tpar = (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec) / 1e9;
-    printf("Versao paralela (P=%d) executou em %f segundos\n", NUM_PROCESSES, tpar);
-    printf("Resultado de verificacao: vector[10] = %f\n", v[10]);
+    double dt = (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec) / 1e9;
+    printf("Versao paralela (P=%d) executou em %f segundos\n", NUM_PROCESSES, dt);
 
     free(v);
     return 0;
